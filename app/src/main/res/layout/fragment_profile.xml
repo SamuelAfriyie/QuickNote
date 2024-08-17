@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center"
+    android:background="?attr/colorOnPrimary">
+
+    <!-- Profile Image -->
+    <ImageView
+        android:id="@+id/profile_images"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/ic_user_icon"
+        android:scaleType="centerCrop"
+        android:layout_marginBottom="16dp"
+        android:background="?attr/colorPrimary"
+        android:contentDescription="Profile Image"
+        android:elevation="8dp"
+        android:layout_gravity="center"
+        android:clipToOutline="true"
+        android:outlineProvider="background"/>
+
+    <!-- Username -->
+    <TextView
+        android:id="@+id/tv_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Username"
+        android:textSize="18sp"
+        android:textColor="?attr/colorOnBackground"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Email -->
+    <TextView
+        android:id="@+id/tv_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="user@example.com"
+        android:textSize="14sp"
+        android:textColor="?attr/colorOnBackground"
+        android:layout_marginBottom="16dp"  />
+
+    <!-- Edit Profile Button -->
+    <Button
+        android:id="@+id/btn_edit_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit Profile"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="?attr/colorPrimary"
+        android:textColor="@android:color/white" />
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/colorOnBackground"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Theme Switcher -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dark Theme"
+            android:textSize="16sp"
+            android:textColor="?attr/colorOnBackground"
+            android:layout_marginEnd="8dp"/>
+
+        <Switch
+            android:id="@+id/switch_theme"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:checked="false"
+            android:trackTint="?attr/colorPrimary"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+    </LinearLayout>
+
+    <!-- Logout Button -->
+    <Button
+        android:id="@+id/btn_logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        android:backgroundTint="?attr/colorError"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Settings Button -->
+    <Button
+        android:id="@+id/btn_settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Settings"
+        android:backgroundTint="?attr/colorPrimaryVariant"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Account Activity Button -->
+    <Button
+        android:id="@+id/btn_account_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Account Activity"
+        android:backgroundTint="?attr/colorSecondary"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="16dp"/>
+
+</LinearLayout>

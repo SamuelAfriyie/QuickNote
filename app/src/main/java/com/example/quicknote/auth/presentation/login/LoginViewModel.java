@@ -31,6 +31,4 @@ public class LoginViewModel extends ViewModel {
     public void login(String email, String password) {
         _loginStatus.setValue(authRepository.loginUser(new User(email, password)));
     }
-
-
 }

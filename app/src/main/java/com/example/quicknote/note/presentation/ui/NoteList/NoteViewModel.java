@@ -1,36 +1,49 @@
 package com.example.quicknote.note.presentation.ui.NoteList;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.quicknote.auth.domain.Note;
+import com.example.quicknote.common.presentation.auth.AuthStateViewModel;
+import com.example.quicknote.core.Utils.Response;
+import com.example.quicknote.core.failures.Failure;
+import com.example.quicknote.note.data.NoteRepository;
+import com.example.quicknote.note.domain.Note;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class NoteViewModel extends ViewModel {
-    private final MutableLiveData<List<Note>> notes = new MutableLiveData<>();
+import javax.inject.Inject;
 
-    public NoteViewModel() {
-        loadNotes();
+import dagger.hilt.android.lifecycle.HiltViewModel;
+
+@HiltViewModel
+public class NoteViewModel extends ViewModel {
+    private final NoteRepository noteRepository;
+    private final MutableLiveData<Response<List<Note>, Failure>> notes = new MutableLiveData<>();
+    private final MutableLiveData<Response<Integer, Failure>> _deletionStatus = new MutableLiveData<>();
+    public final LiveData<Response<Integer, Failure>> deletionStatus = _deletionStatus;
+
+    @Inject
+    public NoteViewModel(NoteRepository noteRepository) {
+        this.noteRepository = noteRepository;
+        fetchAllNotes();
     }
 
-    public LiveData<List<Note>> getNotes() {
+    public LiveData<Response<List<Note>, Failure>> getNotes() {
         return notes;
     }
 
-    private void loadNotes() {
-        // You can fetch this data from SQLite database or repository
-        List<Note> sampleNotes = new ArrayList<>();
-        sampleNotes.add(new Note(1, "Note Title 1", "Description 1"));
-        sampleNotes.add(new  Note(2, "Note Title 2", "Description 1"));
-        sampleNotes.add(new  Note(3, "Note Title 3", "Description 1"));
-        sampleNotes.add(new  Note(4, "Note Title 4", "Description 1"));
-        sampleNotes.add(new Note(5, "Note Title 5", "Description 2"));
-        sampleNotes.add(new Note(6, "Note Title 6", "Description 2"));
-        sampleNotes.add(new Note(7, "Note Title 7", "Description 2"));
 
-        notes.setValue(sampleNotes);
+    public void fetchAllNotes() {
+        notes.setValue(noteRepository.fetchAll(AuthStateViewModel.userCache.getUserId()));
+    }
+    public void filterAllNotes(String filteredText) {
+        notes.setValue(noteRepository.filterByTitle(AuthStateViewModel.userCache.getUserId(), filteredText));
+    }
+
+    public void deleteNote(int noteId) {
+        _deletionStatus.setValue(noteRepository.deleteNote(noteId));
     }
 }

@@ -17,7 +17,7 @@ import com.example.quicknote.auth.domain.User;
 import com.example.quicknote.core.Utils.PwdUtility;
 import com.example.quicknote.core.Utils.Response;
 import com.example.quicknote.core.data.Dao;
-import com.example.quicknote.core.failures.AuthResponse;
+import com.example.quicknote.core.failures.Failure;
 
 public class AuthRepositoryImpl implements AuthRepository {
 
@@ -27,7 +27,7 @@ public class AuthRepositoryImpl implements AuthRepository {
         userDao = new Dao(context);
     }
 
-    public Response<LoginSuccess, AuthResponse> loginUser(User user) {
+    public Response<LoginSuccess, Failure> loginUser(User user) {
         try {
             SQLiteDatabase db = userDao.getReadableDatabase();
             String[] projection = {Dao.COLUMN_USER_PASSWORD};
@@ -43,7 +43,7 @@ public class AuthRepositoryImpl implements AuthRepository {
                 if(!PwdUtility.checkPassword(user.getPassword(), storedHashedPassword)) {
                     return Response.failure(new UserNameOrPassword("EmailPasswordIncorrect"));
                 }
-                Response<Integer, AuthResponse> res =  updateLoginStatus(user.getEmail(), true);
+                Response<Integer, Failure> res =  updateLoginStatus(user.getEmail(), true);
                 if(res.isFailure()) {
                     return  Response.failure(new DatabaseNotFound("StatusUpdateFailed","Unable to update login status"));
                 }
@@ -58,7 +58,7 @@ public class AuthRepositoryImpl implements AuthRepository {
     }
 
     @Override
-    public Response<SignUpSuccess, AuthResponse> createUser(User user) {
+    public Response<SignUpSuccess, Failure> createUser(User user) {
         try {
             if (emailAlreadyExist(user.getEmail())) {
                 return Response.failure(new EmailAlreadyExist("UserCreationFailed"));
@@ -82,7 +82,7 @@ public class AuthRepositoryImpl implements AuthRepository {
     }
 
     @Override
-    public Response<User, AuthResponse> fetchCurrentLoggedInUser() {
+    public Response<User, Failure> fetchCurrentLoggedInUser() {
         try {
             SQLiteDatabase db = userDao.getReadableDatabase();
 
@@ -124,7 +124,7 @@ public class AuthRepositoryImpl implements AuthRepository {
         return exists;
     }
 
-    public Response<Integer, AuthResponse> updateLoginStatus(String email, boolean isLoggedIn) {
+    public Response<Integer, Failure> updateLoginStatus(String email, boolean isLoggedIn) {
         try {
             SQLiteDatabase db = userDao.getWritableDatabase();
 

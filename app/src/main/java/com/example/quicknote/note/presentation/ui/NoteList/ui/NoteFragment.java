@@ -5,33 +5,44 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.quicknote.R;
-import com.example.quicknote.auth.domain.Note;
-import com.example.quicknote.auth.presentation.login.ui.LoginActivity;
 import com.example.quicknote.common.presentation.utils.NavHost;
+import com.example.quicknote.core.Utils.Response;
+import com.example.quicknote.core.failures.Failure;
 import com.example.quicknote.databinding.FragmentNoteBinding;
-import com.example.quicknote.databinding.FragmentSettingsBinding;
+import com.example.quicknote.note.domain.Note;
+import com.example.quicknote.note.presentation.ui.AddNote.ui.AddNoteActivity;
 import com.example.quicknote.note.presentation.ui.NoteList.NoteAdapter;
 import com.example.quicknote.note.presentation.ui.NoteList.NoteViewModel;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class NoteFragment extends Fragment {
 
     private FragmentNoteBinding binding;
-    private NoteViewModel noteViewModel;
+    public NoteViewModel noteViewModel;
     private RecyclerView recyclerView;
     private NoteAdapter noteAdapter;
+
+    public NoteFragment(NoteViewModel noteViewModel) {
+        this.noteViewModel = noteViewModel;
+    }
+
+    public NoteFragment() {
+    }
 
     @Override
     public View onCreateView(
@@ -50,19 +61,20 @@ public class NoteFragment extends Fragment {
         recyclerView = binding.recyclerViewNotes;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        noteAdapter = new NoteAdapter(noteArrayList);
+        noteAdapter = new NoteAdapter(noteArrayList, noteViewModel);
         binding.recyclerViewNotes.setAdapter(noteAdapter);
 
-        noteViewModel = new ViewModelProvider(this).get(NoteViewModel.class);
-        noteViewModel.getNotes().observe(getViewLifecycleOwner(), new Observer<List<Note>>() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onChanged(List<Note> notes) {
-                noteAdapter.notifyDataSetChanged();
-                noteArrayList.addAll(notes);
+        noteViewModel.getNotes().observe(getViewLifecycleOwner(), v -> observeNoteData(v, noteArrayList));
+         noteViewModel.deletionStatus.observe(getViewLifecycleOwner(), v -> {
+            if (v.isSuccess()) {
+                noteViewModel.fetchAllNotes();
+                Toast.makeText(getContext(), "Note deleted successfully", Toast.LENGTH_SHORT).show();
             }
         });
-        binding.fabAddNote.setOnClickListener(v -> {});
+
+        binding.fabAddNote.setOnClickListener(v -> {
+            NavHost.navigateTo(this.getContext(), AddNoteActivity.class);
+        });
     }
 
     @Override
@@ -70,4 +82,19 @@ public class NoteFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void observeNoteData(Response<List<Note>, Failure> v, List<Note> noteArrayList) {
+        noteAdapter.notifyDataSetChanged();
+        if (v.isSuccess()) {
+            Response.Success<List<Note>, Failure> success = (Response.Success<List<Note>, Failure>) v;
+            noteArrayList.clear();
+            noteArrayList.addAll(success.getValue());
+        } else {
+            Response.Failure<List<Note>, Failure> failure = (Response.Failure<List<Note>, Failure>) v;
+            Failure res = failure.getValue();
+            Toast.makeText(getContext(), res.getRES_MSG(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }

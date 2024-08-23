@@ -11,9 +11,8 @@ import com.example.quicknote.auth.presentation.login.ui.LoginActivity;
 import com.example.quicknote.auth.presentation.signup.SignUpViewModel;
 import com.example.quicknote.common.presentation.utils.NavHost;
 import com.example.quicknote.core.Utils.Response;
-import com.example.quicknote.core.failures.AuthResponse;
+import com.example.quicknote.core.failures.Failure;
 import com.example.quicknote.databinding.ActivitySignUpBinding;
-import com.example.quicknote.note.presentation.ui.NoteActivity;
 
 import java.util.Objects;
 
@@ -55,15 +54,15 @@ public class SignUpActivity extends AppCompatActivity {
             Toast.makeText(this, validateMsg, Toast.LENGTH_SHORT).show();
         }
     }
-    private void observeSignUpStatus(final Response<SignUpSuccess, AuthResponse> v) {
+    private void observeSignUpStatus(final Response<SignUpSuccess, Failure> v) {
         if (v.isSuccess()) {
-            Response.Success<SignUpSuccess, AuthResponse> success = (Response.Success<SignUpSuccess, AuthResponse>) v;
-            AuthResponse res = success.getValue();
+            Response.Success<SignUpSuccess, Failure> success = (Response.Success<SignUpSuccess, Failure>) v;
+            Failure res = success.getValue();
             NavHost.navigateTo(this, LoginActivity.class);
             Toast.makeText(this, res.getRES_MSG(), Toast.LENGTH_SHORT).show();
         } else {
-            Response.Failure<SignUpSuccess, AuthResponse> failure = (Response.Failure<SignUpSuccess, AuthResponse>) v;
-            AuthResponse res = failure.getValue();
+            Response.Failure<SignUpSuccess, Failure> failure = (Response.Failure<SignUpSuccess, Failure>) v;
+            Failure res = failure.getValue();
             Toast.makeText(this, res.getRES_MSG(), Toast.LENGTH_SHORT).show();
         }
     }

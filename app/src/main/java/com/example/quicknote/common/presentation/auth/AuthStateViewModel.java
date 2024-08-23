@@ -11,7 +11,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.quicknote.auth.data.repo.AuthRepository;
 import com.example.quicknote.auth.domain.User;
 import com.example.quicknote.core.Utils.Response;
-import com.example.quicknote.core.failures.AuthResponse;
+import com.example.quicknote.core.failures.Failure;
 
 import javax.inject.Inject;
 
@@ -31,19 +31,17 @@ public class AuthStateViewModel extends AndroidViewModel {
     }
 
     public void logout(String email) {
-        Response<Integer, AuthResponse> res = authRepository.updateLoginStatus(email, false);
+        Response<Integer, Failure> res = authRepository.updateLoginStatus(email, false);
         currentAuthStatus.setValue(res.isSuccess());
     }
 
     public void getLastLoggedInUser() {
-        Response<User, AuthResponse> res = authRepository.fetchCurrentLoggedInUser();
+        Response<User, Failure> res = authRepository.fetchCurrentLoggedInUser();
         if(res.isSuccess()) {
-            Response.Success<User, AuthResponse> successState = (Response.Success<User, AuthResponse>) res;
+            Response.Success<User, Failure> successState = (Response.Success<User, Failure>) res;
             userCache = successState.getValue();
             currentAuthStatus.setValue(true);
-            Log.d( "User", userCache.toString());
         } else {
-//            Response.Failure<User, AuthResponse> failureState = (Response.Failure<User, AuthResponse>) res;
             currentAuthStatus.setValue(false);
         }
     }

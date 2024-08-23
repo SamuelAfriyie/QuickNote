@@ -50,10 +50,14 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.52")
     implementation("androidx.navigation:navigation-fragment:2.7.7")
     implementation("androidx.navigation:navigation-ui:2.7.7")
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
     annotationProcessor("com.google.dagger:hilt-compiler:2.52")
 
 //    implementation("io.vavr:vavr:0.10.4")
     implementation("org.mindrot:jbcrypt:0.4")
+    implementation("jp.wasabeef:richeditor-android:2.0.0")
+
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")

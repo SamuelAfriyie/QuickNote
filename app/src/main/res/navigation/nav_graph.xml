@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/FirstFragment"
-        android:name="com.example.quicknote.note.presentation.ui.SettingsFragment"
+        android:name="com.example.quicknote.note.presentation.ui.CalenderFragment"
         android:label="@string/first_fragment_label"
         tools:layout="@layout/fragment_profile">
 
@@ -19,7 +19,7 @@
         android:id="@+id/SecondFragment"
         android:name="com.example.quicknote.note.presentation.ui.ProfileFragment"
         android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_settings">
+        tools:layout="@layout/fragment_calender">
 
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"

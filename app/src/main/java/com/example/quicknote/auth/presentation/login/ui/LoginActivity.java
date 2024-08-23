@@ -12,7 +12,7 @@ import com.example.quicknote.auth.presentation.signup.ui.SignUpActivity;
 import com.example.quicknote.common.presentation.auth.AuthStateViewModel;
 import com.example.quicknote.common.presentation.utils.NavHost;
 import com.example.quicknote.core.Utils.Response;
-import com.example.quicknote.core.failures.AuthResponse;
+import com.example.quicknote.core.failures.Failure;
 import com.example.quicknote.databinding.ActivityLoginBinding;
 import com.example.quicknote.note.presentation.ui.NoteActivity;
 
@@ -24,10 +24,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class LoginActivity extends AppCompatActivity {
-
     @Inject
     AuthStateViewModel authStateViewModel;
-
     private LoginViewModel loginViewModel;
     private ActivityLoginBinding binding;
 
@@ -66,16 +64,15 @@ public class LoginActivity extends AppCompatActivity {
         return null;
     }
 
-    private void observeLoginStatus(final Response<LoginSuccess, AuthResponse> v) {
+    private void observeLoginStatus(final Response<LoginSuccess, Failure> v) {
         if (v.isSuccess()) {
-            Response.Success<LoginSuccess, AuthResponse> success = (Response.Success<LoginSuccess, AuthResponse>) v;
-            AuthResponse res = success.getValue();
+            Response.Success<LoginSuccess, Failure> success = (Response.Success<LoginSuccess, Failure>) v;
+            authStateViewModel.getLastLoggedInUser();
             NavHost.navigateTo(this, NoteActivity.class);
-            Toast.makeText(this, res.getRES_MSG(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, success.getValue().getRES_MSG(), Toast.LENGTH_SHORT).show();
         } else {
-            Response.Failure<LoginSuccess, AuthResponse> failure = (Response.Failure<LoginSuccess, AuthResponse>) v;
-            AuthResponse res = failure.getValue();
-            Toast.makeText(this, res.getRES_MSG(), Toast.LENGTH_SHORT).show();
+            Response.Failure<LoginSuccess, Failure> failure = (Response.Failure<LoginSuccess, Failure>) v;
+            Toast.makeText(this, failure.getValue().getRES_MSG(), Toast.LENGTH_SHORT).show();
         }
     }
 }
